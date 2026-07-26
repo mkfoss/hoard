@@ -260,6 +260,14 @@ func Initialize() (*Server, error) {
 	// handle favicon override
 	r.HandleFunc("/favicon.ico", handleFavicon(staticUI))
 
+	// Serve the Hoard UI. This must be registered before the "/*" catch-all
+	// below, which would otherwise answer /hoard with the legacy index.html.
+	hoardUI := hoardUIHandler(hoardEndpoint, ui.HoardUIBox.(fs.ReadDirFS), func(w http.ResponseWriter, r *http.Request) {
+		setPageSecurityHeaders(w, r, pluginCache.ListPlugins())
+	})
+	r.Handle(hoardEndpoint, hoardUI)
+	r.Handle(hoardEndpoint+"/*", hoardUI)
+
 	// Serve the web app
 	r.HandleFunc("/*", func(w http.ResponseWriter, r *http.Request) {
 		ext := path.Ext(r.URL.Path)

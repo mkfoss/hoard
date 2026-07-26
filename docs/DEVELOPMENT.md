@@ -44,10 +44,12 @@ NOTE: The `make` command in OpenBSD will be `gmake`. For example, `make pre-ui` 
 
 ## Commands
 
-* `make pre-ui` - Installs the UI dependencies. This only needs to be run once after cloning the repository, or if the dependencies are updated.
+* `make pre-ui` - Installs the dependencies for both UIs (`ui/v2.5` and `ui/hoard`). This only needs to be run once after cloning the repository, or if the dependencies are updated.
 * `make generate` - Generates Go and UI GraphQL files. Requires `make pre-ui` to have been run.
 * `make generate-stash-box-client` - Generate Go files for the Stash-box client code.
-* `make ui` - Builds the UI. Requires `make pre-ui` to have been run.
+* `make ui` - Builds both UIs. Requires `make pre-ui` to have been run.
+* `make ui-only` - Builds only the classic UI (`ui/v2.5`), served at `/`.
+* `make ui-hoard` - Builds only the Hoard UI (`ui/hoard`), served at `/hoard`. See `ui/hoard/README.md`.
 * `make stash` - Builds the `stash` binary (make sure to build the UI as well... see below)
 * `make stash-macapp` - Builds the `Stash.app` macOS app (only works when on macOS, for cross-compilation see below)
 * `make phasher` - Builds the `phasher` binary

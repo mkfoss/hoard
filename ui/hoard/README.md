@@ -57,6 +57,28 @@ HTML, JavaScript, CSS, and assets — **no Node.js server is needed in productio
 unmatched path below the base must be answered with `build/200.html` and routed on
 the client.
 
+## Serving from the Go server
+
+`build/` is embedded into the `stash` binary by `ui/ui.go` and served at `/hoard` by
+`internal/api/ui_hoard.go`. From the repository root:
+
+```bash
+make pre-ui      # once, installs deps for both UIs
+make generate
+make ui          # builds ui/v2.5 and ui/hoard (or just: make ui-hoard)
+make build       # -> ./stash
+```
+
+The build output is not committed, matching `ui/v2.5`. For backend-only work,
+`make touch-ui` writes a placeholder `build/200.html` so the `//go:embed` still
+compiles — the binary then serves an empty page at `/hoard`.
+
+**Known limitation:** the base path is baked in at build time, so Hoard does not
+work behind a reverse-proxy prefix (`X-Forwarded-Prefix`). The classic UI handles
+this by rewriting `<base href>` per request; a SvelteKit SPA fallback always emits
+absolute asset paths, so the same trick does not apply. Rebuild with a matching
+`HOARD_BASE_PATH` if you need this today.
+
 ## Themes
 
 DaisyUI's built-in themes are all enabled in `src/app.css`:
@@ -84,8 +106,6 @@ to avoid a flash. It shares the `hoard.theme` key — change both together.
 
 These are out of scope for the bootstrap and will land as their own vertical slices:
 
-- **Serving from Go / embedding the build.** `ui/ui.go` is untouched; `build/` is not
-  yet embedded in the binary.
 - **GraphQL integration.** No client, no generated types, no `.graphql` documents
   yet. When it lands it goes behind `src/lib/api/`, generated from the authoritative
   schema.

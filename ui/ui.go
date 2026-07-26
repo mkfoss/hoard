@@ -15,6 +15,17 @@ var UIBox fs.FS
 var loginUIBox embed.FS
 var LoginUIBox fs.FS
 
+// The Hoard UI is a static SPA served at /hoard. Its build output contains
+// hashed asset filenames beginning with an underscore, which the default embed
+// pattern skips, hence the all: prefix.
+//
+//go:embed all:hoard/build
+var hoardUIBox embed.FS
+
+// HoardUIBox holds the built Hoard UI. Run `make ui-hoard` to populate it;
+// `make touch-ui` writes a placeholder so backend-only builds still compile.
+var HoardUIBox fs.FS
+
 func init() {
 	var err error
 	UIBox, err = fs.Sub(uiBox, "v2.5/build")
@@ -23,6 +34,11 @@ func init() {
 	}
 
 	LoginUIBox, err = fs.Sub(loginUIBox, "login")
+	if err != nil {
+		panic(err)
+	}
+
+	HoardUIBox, err = fs.Sub(hoardUIBox, "hoard/build")
 	if err != nil {
 		panic(err)
 	}

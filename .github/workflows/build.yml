@@ -55,7 +55,9 @@ jobs:
       with:
         node-version: '20'
         cache: 'pnpm'
-        cache-dependency-path: ui/v2.5/pnpm-lock.yaml
+        cache-dependency-path: |
+          ui/v2.5/pnpm-lock.yaml
+          ui/hoard/pnpm-lock.yaml
 
     - name: Install UI dependencies
       run: make pre-ui
@@ -67,8 +69,13 @@ jobs:
       uses: actions/cache@v5
       id: cache-ui
       with:
-        path: ui/v2.5/build
-        key: ${{ runner.os }}-ui-build-${{ hashFiles('ui/v2.5/pnpm-lock.yaml', 'ui/v2.5/public/**', 'ui/v2.5/src/**', 'graphql/**/*.graphql') }}
+        # Both UI builds share a cache entry because a single `make ui` produces
+        # both. The key must hash both trees, or a hit could skip the build and
+        # leave one of them missing, which fails the //go:embed in ui/ui.go.
+        path: |
+          ui/v2.5/build
+          ui/hoard/build
+        key: ${{ runner.os }}-ui-build-${{ hashFiles('ui/v2.5/pnpm-lock.yaml', 'ui/v2.5/public/**', 'ui/v2.5/src/**', 'ui/hoard/pnpm-lock.yaml', 'ui/hoard/src/**', 'ui/hoard/static/**', 'graphql/**/*.graphql') }}
 
     - name: Validate UI
       # skip UI validation for pull requests if UI is unchanged
@@ -90,6 +97,7 @@ jobs:
           internal/api/generated_exec.go
           internal/api/generated_models.go
           ui/v2.5/build/
+          ui/hoard/build/
           ui/login/locales/
 
   # Job 2: Integration tests

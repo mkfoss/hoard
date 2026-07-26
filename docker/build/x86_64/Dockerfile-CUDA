@@ -6,6 +6,7 @@ FROM node:24-alpine AS frontend
 RUN apk add --no-cache make git
 ## cache node_modules separately
 COPY ./ui/v2.5/package.json ./ui/v2.5/pnpm-lock.yaml /stash/ui/v2.5/
+COPY ./ui/hoard/package.json ./ui/hoard/pnpm-lock.yaml /stash/ui/hoard/
 WORKDIR /stash
 COPY Makefile /stash/
 COPY ./graphql /stash/graphql/
@@ -16,7 +17,9 @@ RUN make pre-ui
 RUN make generate-ui
 ARG GITHASH
 ARG STASH_VERSION
-RUN BUILD_DATE=$(date +"%Y-%m-%d %H:%M:%S") make ui-only
+# ui-only rather than ui: the `ui` target also runs generate-login-locale, which
+# needs Go. ui-hoard builds the Hoard UI embedded and served at /hoard.
+RUN BUILD_DATE=$(date +"%Y-%m-%d %H:%M:%S") make ui-only ui-hoard
 
 # Build Backend
 FROM golang:1.25.9-bullseye AS backend

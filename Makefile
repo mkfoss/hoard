@@ -283,9 +283,13 @@ touch-ui:
 ifdef IS_WIN_SHELL
 	@if not exist "ui\\v2.5\\build" mkdir ui\\v2.5\\build
 	@type nul >> ui/v2.5/build/index.html
+	@if not exist "ui\\hoard\\build" mkdir ui\\hoard\\build
+	@type nul >> ui/hoard/build/200.html
 else
 	@mkdir -p ui/v2.5/build
 	@touch ui/v2.5/build/index.html
+	@mkdir -p ui/hoard/build
+	@touch ui/hoard/build/200.html
 endif
 
 # Regenerates GraphQL files
@@ -367,8 +371,10 @@ server-clean:
 pre-ui:
 ifdef CI
 	cd ui/v2.5 && pnpm config set store-dir ~/.pnpm-store && pnpm install --frozen-lockfile
+	cd ui/hoard && pnpm config set store-dir ~/.pnpm-store && pnpm install --frozen-lockfile
 else
 	cd ui/v2.5 && pnpm install --frozen-lockfile
+	cd ui/hoard && pnpm install --frozen-lockfile
 endif
 
 .PHONY: ui-env
@@ -381,11 +387,16 @@ ifdef STASH_SOURCEMAPS
 endif
 
 .PHONY: ui
-ui: ui-only generate-login-locale
+ui: ui-only ui-hoard generate-login-locale
 
 .PHONY: ui-only
 ui-only: ui-env
 	cd ui/v2.5 && pnpm run build
+
+# builds the Hoard UI, embedded and served at /hoard
+.PHONY: ui-hoard
+ui-hoard:
+	cd ui/hoard && pnpm run build
 
 .PHONY: zip-ui
 zip-ui:
