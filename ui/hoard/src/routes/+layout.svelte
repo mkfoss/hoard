@@ -1,7 +1,6 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import ThemeSelector from '$lib/components/ThemeSelector.svelte';
 	import ServerVersion from '$lib/components/ServerVersion.svelte';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
@@ -10,6 +9,7 @@
 
 	const links = [
 		{ href: resolve('/'), label: 'Home' },
+		{ href: resolve('/settings'), label: 'Settings' },
 		{ href: resolve('/about'), label: 'About' }
 	];
 </script>
@@ -40,9 +40,8 @@
 
 	<footer class="footer items-center gap-4 bg-base-100 p-4 text-base-content sm:footer-horizontal">
 		<p class="text-sm">Hoard — an independent, AGPL-3.0 fork of Stash.</p>
-		<ServerVersion />
 		<div class="sm:ms-auto">
-			<ThemeSelector />
+			<ServerVersion />
 		</div>
 	</footer>
 </div>
