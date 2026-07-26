@@ -45,7 +45,8 @@ NOTE: The `make` command in OpenBSD will be `gmake`. For example, `make pre-ui` 
 ## Commands
 
 * `make pre-ui` - Installs the dependencies for both UIs (`ui/v2.5` and `ui/hoard`). This only needs to be run once after cloning the repository, or if the dependencies are updated.
-* `make generate` - Generates Go and UI GraphQL files. Requires `make pre-ui` to have been run.
+* `make generate` - Generates Go and UI GraphQL files for both UIs. Requires `make pre-ui` to have been run.
+* `make generate-ui-hoard` - Generates only the Hoard UI's GraphQL types. Its output is not committed, so this must run before the Hoard UI can be type-checked, tested or built.
 * `make generate-stash-box-client` - Generate Go files for the Stash-box client code.
 * `make ui` - Builds both UIs. Requires `make pre-ui` to have been run.
 * `make ui-only` - Builds only the classic UI (`ui/v2.5`), served at `/`.

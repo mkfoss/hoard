@@ -142,15 +142,38 @@ handled rather than thrown. When nothing valid is stored it follows
 An inline script in `src/app.html` applies the remembered theme before first paint
 to avoid a flash. It shares the `hoard.theme` key — change both together.
 
+## GraphQL
+
+All server access goes through `src/lib/api/`. Components import from `$lib/api`
+and never call `fetch` directly or reach into `generated/`.
+
+Operations are written as `.graphql` documents in `src/lib/api/documents/`, and
+their types are generated from the authoritative schema in `../../graphql`:
+
+```bash
+pnpm run codegen            # or: make generate-ui-hoard, from the repo root
+```
+
+**The generated output is not committed**, matching how `ui/v2.5` treats its own.
+`src/lib/api/generated/` is git-ignored, so codegen must run before `pnpm check`,
+`pnpm test` or `pnpm build` will work on a fresh clone. `make generate` covers it.
+
+Never hand-write operation or result types, and never edit anything under
+`generated/` — change `codegen.ts` instead. Custom scalars are mapped there, and
+`strictScalars` fails the build if the schema gains one without a mapping.
+
+The client itself is a single `request()` function, not a GraphQL client library.
+It posts to `/graphql` with `credentials: 'same-origin'` so the session cookie is
+sent, and distinguishes `UnauthorizedError` from other failures so callers can send
+the visitor to log in. Documents are emitted as plain strings, so the `graphql`
+package stays a build-time dependency and never reaches the browser bundle.
+
 ## Deliberately deferred
 
-These are out of scope for the bootstrap and will land as their own vertical slices:
+These will land as their own vertical slices:
 
-- **GraphQL integration.** No client, no generated types, no `.graphql` documents
-  yet. When it lands it goes behind `src/lib/api/`, generated from the authoritative
-  schema.
-- **Authentication and session handling**, media browsing, playback, and metadata
-  editing.
+- **Authentication and session handling** beyond recognising a 401.
+- **Media browsing, playback, and metadata editing** — the first real workflow.
 
 ## Constraints
 

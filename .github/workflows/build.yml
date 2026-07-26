@@ -136,6 +136,11 @@ jobs:
     - name: Install dependencies
       run: cd ui/hoard && pnpm install --frozen-lockfile
 
+    # Generated GraphQL types are not committed, so nothing type-checks, tests or
+    # builds until codegen has run.
+    - name: Generate GraphQL types
+      run: make generate-ui-hoard
+
     # Chromium must be present before validate-ui-hoard: the component tests run in
     # Vitest browser mode, which launches it through Playwright. Cached separately
     # from pnpm because the browser download dominates this job, and keyed on the

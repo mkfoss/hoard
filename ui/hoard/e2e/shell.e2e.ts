@@ -23,6 +23,20 @@ test('the classic-interface link targets the site root', async ({ page }) => {
 	await expect(link).toHaveAttribute('href', '/');
 });
 
+// The preview server serves the built SPA with no Go server behind it, which is
+// the real "backend is down" case. The app must still render and say so, rather
+// than showing a blank page or an unhandled rejection.
+test('degrades gracefully when the server cannot be reached', async ({ page }) => {
+	const crashes: string[] = [];
+	page.on('pageerror', (error) => crashes.push(error.message));
+
+	await page.goto('./');
+
+	await expect(page.getByRole('heading', { level: 1, name: 'Hoard' })).toBeVisible();
+	await expect(page.getByText('Server unreachable')).toBeVisible();
+	expect(crashes).toEqual([]);
+});
+
 test('assets are requested from below the base path', async ({ page }) => {
 	const scripts: string[] = [];
 	page.on('request', (request) => {

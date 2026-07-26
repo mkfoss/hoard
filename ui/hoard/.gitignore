@@ -22,3 +22,6 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# GraphQL codegen output — regenerate with `pnpm run codegen`
+/src/lib/api/generated

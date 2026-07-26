@@ -297,8 +297,15 @@ endif
 generate: generate-backend generate-ui
 
 .PHONY: generate-ui
-generate-ui:
+generate-ui: generate-ui-hoard
 	cd ui/v2.5 && pnpm run gqlgen
+
+# Generates the Hoard UI's GraphQL types from graphql/schema. Like ui/v2.5's
+# generated types, the output is not committed and must exist before the Hoard UI
+# can be type-checked, tested or built.
+.PHONY: generate-ui-hoard
+generate-ui-hoard:
+	cd ui/hoard && pnpm run codegen
 
 .PHONY: generate-backend
 generate-backend: touch-ui
