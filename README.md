@@ -1,119 +1,211 @@
-# Stash
+<div align="center">
 
-[![Build](https://github.com/stashapp/stash/actions/workflows/build.yml/badge.svg?branch=develop&event=push)](https://github.com/stashapp/stash/actions/workflows/build.yml)
-[![Docker pulls](https://img.shields.io/docker/pulls/stashapp/stash?logo=docker)](https://hub.docker.com/r/stashapp/stash 'DockerHub')
-[![GitHub Sponsors](https://img.shields.io/github/sponsors/stashapp?logo=github)](https://github.com/sponsors/stashapp)
-[![Open Collective backers](https://img.shields.io/opencollective/backers/stashapp?logo=opencollective)](https://opencollective.com/stashapp)
-[![Go Report Card](https://goreportcard.com/badge/github.com/stashapp/stash)](https://goreportcard.com/report/github.com/stashapp/stash)
-[![Discord](https://img.shields.io/discord/559159668438728723.svg?logo=discord)](https://discord.gg/2TsNFKt)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/stashapp/stash?logo=github)](https://github.com/stashapp/stash/releases/latest)
-[![Codeberg Translate](https://img.shields.io/weblate/progress/stash?server=https%3A%2F%2Ftranslate.codeberg.org&logo=weblate)](https://translate.codeberg.org/engage/stash/)
-[![GitHub issues by-label](https://img.shields.io/github/issues-raw/stashapp/stash/bounty?logo=github)](https://github.com/stashapp/stash/labels/bounty)
+# Hoard
 
-<h3>Stash is a self-hosted webapp written in Go which organizes and serves your diverse content collection, catering to both your SFW and NSFW needs.</h3>
+### Your media. Your server. Your rules.
 
-![Screenshot of Stash web application interface](docs/readme_assets/demo_image.png)
+A private, self-hosted home media server for organizing, enriching, managing, and enjoying the media you keep.
 
-- Stash gathers information about videos in your collection from the internet, and is extensible through the use of community-built plugins for a large number of content producers and sites.
-- Stash supports a wide variety of both video and image formats.
-- You can tag videos and find them later.
-- Stash provides statistics about performers, tags, studios and more.
+[![Build](https://github.com/mkfoss/hoard/actions/workflows/build.yml/badge.svg?branch=develop\&event=push)](https://github.com/mkfoss/hoard/actions/workflows/build.yml)
+[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
+[![Status: Early Development](https://img.shields.io/badge/status-early%20development-orange.svg)](https://github.com/mkfoss/hoard)
 
-You can [watch a SFW demo video](https://vimeo.com/545323354) to see it in action.
+</div>
 
-For further information see [Support & Resources](#support--resources) section.
-
-## Installing Stash
-
-> [!tip]
-Step-by-step instructions are available at [docs.stashapp.cc/installation](https://docs.stashapp.cc/installation/).
-
-> [!important]
-> **Windows Users**
+> [!IMPORTANT]
+> **Hoard is in the early stages of its transition from Stash.**
 >
-> As of version 0.27.0, Stash no longer supports _Windows 7, 8, Server 2008 and Server 2012._  
-> At least Windows 10 or Server 2016 is required.
->
-> **macOS Users**
->
-> As of version 0.29.0, Stash requires _macOS 11 Big Sur_ or later.  
-> As of version 0.32.0, Stash requires _macOS 12 Monterey_ or later.  
-> Older versions can still be run through Docker.
+> The existing Stash functionality remains the working foundation while Hoard develops a new interface and gradually expands into a general-purpose home media server. Expect ongoing changes, incomplete Hoard-specific branding, and development builds that may not yet be suitable for irreplaceable libraries.
 
-<img src="docs/readme_assets/windows_logo.svg" width="100%" height="75"> Windows | <img src="docs/readme_assets/mac_logo.svg" width="100%" height="75"> macOS | <img src="docs/readme_assets/linux_logo.svg" width="100%" height="75"> Linux | <img src="docs/readme_assets/docker_logo.svg" width="100%" height="75"> Docker
-:---:|:---:|:---:|:---:
-[Latest Release](https://github.com/stashapp/stash/releases/latest/download/stash-win.exe) <br /> <sup><sub>[Development Preview](https://github.com/stashapp/stash/releases/download/latest_develop/stash-win.exe)</sub></sup> | [Latest Release](https://github.com/stashapp/stash/releases/latest/download/Stash.app.zip) <br /> <sup><sub>[Development Preview](https://github.com/stashapp/stash/releases/download/latest_develop/Stash.app.zip)</sub></sup> | [Latest Release (amd64)](https://github.com/stashapp/stash/releases/latest/download/stash-linux) <br /> <sup><sub>[Development Preview (amd64)](https://github.com/stashapp/stash/releases/download/latest_develop/stash-linux)</sub></sup> <br /> [More Architectures...](https://github.com/stashapp/stash/releases/latest) | [Instructions](docker/production/README.md) <br /> <sup><sub>[Sample docker-compose.yml](docker/production/docker-compose.yml)</sub></sup>
+## What is Hoard?
 
-Download links for other platforms and architectures are available on the [Releases](https://github.com/stashapp/stash/releases) page.
+Hoard is an open-source, self-hosted media server designed to help you take control of a growing personal media collection.
 
-### First Run
+It aims to provide one private, coherent system for discovering, organizing, enriching, and serving the media stored in your home—without requiring that your collection fit a single commercial service, content category, or cloud platform.
 
-#### Windows/macOS Users: Security Prompt
+Hoard begins with strong support for video and image collections and is intended to grow toward a broader range of home media, including:
 
-On Windows or macOS, running the app might present a security prompt since the application binary isn't yet signed. 
+* films and episodic video
+* personal, archival, and independently produced video
+* photography and image collections
+* music and other audio
+* specialist and enthusiast libraries
+* mature and adult media
 
-- On Windows, bypass this by clicking "more info" and then the "run anyway" button.
-- On macOS, Control+Click the app, click "Open", and then "Open" again.
+Adult media will remain supported, but it will be treated as one kind of personal media rather than the identity of the entire application.
 
-#### ffmpeg
+A hoard is not merely a pile of files. It is a collection kept because it matters.
 
-Stash requires FFmpeg. If you don't have it installed, Stash will prompt you to download a copy during setup. It is recommended that Linux users install `ffmpeg` from their distro's package manager.
+## Built from Stash
 
-## Usage
+Hoard is an independent fork of [Stash](https://github.com/stashapp/stash), an established open-source application for organizing and serving video and image collections.
 
-### Quickstart Guide
+Stash provides Hoard with a substantial and proven foundation, including:
 
-Stash is a web-based application. Once the application is running, the interface is available (by default) from `http://localhost:9999`.
+* a Go media server
+* filesystem scanning and reconciliation
+* video and image management
+* metadata, tags, performers, studios, galleries, and groups
+* browser-based media playback
+* thumbnails, previews, sprites, and media processing
+* FFmpeg integration
+* scraping and metadata-provider support
+* plugins and community extensions
+* a GraphQL API
+* SQLite storage
+* configuration, tasks, migrations, and backups
 
-On first run, Stash will prompt you for some configuration options and media directories to index, called "Scanning" in Stash. After scanning, your media will be available for browsing, curating, editing, and tagging.
+Hoard does not intend to discard that work and recreate it badly.
 
-Stash can pull metadata (performers, tags, descriptions, studios, and more) directly from many sites through the use of [scrapers](https://github.com/stashapp/stash/blob/develop/ui/v2.5/src/docs/en/Manual/Scraping.md), which integrate directly into Stash. Identifying an entire collection will typically require a mix of multiple sources:
-- The stashapp team maintains [StashDB](https://stashdb.org/), a crowd-sourced repository of scene, studio, and performer information. Connecting it to Stash will allow you to automatically identify much of a typical media collection. It runs on our stash-box software and is primarily focused on mainstream digital scenes and studios. Instructions, invite codes, and more can be found in this guide to [Accessing StashDB](https://guidelines.stashdb.org/docs/faq_getting-started/stashdb/accessing-stashdb/).
-- Several community-managed stash-box databases can also be connected to Stash in a similar manner. Each one serves a slightly different niche and follows their own methodology. A rundown of each stash-box, their differences, and the information you need to sign up can be found in the [Metadata Sources](https://docs.stashapp.cc/metadata-sources/stash-box-instances/) section of the documentation.
-- Many community-maintained scrapers can also be downloaded, installed, and updated from within Stash, allowing you to pull data from a wide range of other websites and databases. They can be found by navigating to `Settings → Metadata Providers → Available Scrapers → Community (stable)`. These can be trickier to use than a stash-box because every scraper works a little differently. For more information, please visit the [CommunityScrapers repository](https://github.com/stashapp/CommunityScrapers).
-- All of the above methods of scraping data into Stash are also covered in more detail in our [Guide to Scraping](https://docs.stashapp.cc/beginner-guides/guide-to-scraping/).
+Instead, the project will evolve Stash incrementally: preserving useful capabilities, improving workflows, expanding the supported media domain, and replacing parts only when Hoard has a working alternative.
 
-<sub>[StashDB](http://stashdb.org) is the canonical instance of our open source metadata API, [stash-box](https://github.com/stashapp/stash-box).</sub>
+Hoard is not affiliated with, sponsored by, or endorsed by the Stash project. The Stash name and branding belong to their respective project and contributors.
 
-## Support & Resources
+## The Transition
 
-Need help or want to get involved? Start with the documentation, then reach out to the community if you need further assistance.
+Hoard will remain usable throughout its development rather than disappearing into a long ground-up rewrite.
 
-### Documentation
+The transition begins by adding a new SvelteKit interface alongside the existing Stash interface:
 
-- [Official documentation](https://docs.stashapp.cc) - official guides guides and troubleshooting.
-- [In-app manual](https://docs.stashapp.cc/in-app-manual) press <kbd>Shift</kbd> + <kbd>?</kbd> in the app or view the manual online.
-- [FAQ](https://discourse.stashapp.cc/c/support/faq/28) - common questions and answers.
-- [Community wiki](https://discourse.stashapp.cc/tags/c/community-wiki/22/stash) - guides, how-to’s and tips.
-  
-### Community & Discussion
+```text
+/          Existing Stash interface
+/hoard/    New Hoard interface
+```
 
-- [Community forum](https://discourse.stashapp.cc) - community support, feature requests and discussions.
-- [Discord](https://discord.gg/2TsNFKt) - real-time chat and community support.
-- [GitHub discussions](https://github.com/stashapp/stash/discussions) - community support and feature discussions.
-- [Lemmy community](https://discuss.online/c/stashapp) - board-style community space.
+The new interface will be introduced through complete, usable workflows rather than a collection of disconnected replacement screens.
 
-### Community Scrapers & Plugins
+Once it provides sufficient coverage for normal use, the routes can be reversed:
 
-- [Metadata sources](https://docs.stashapp.cc/metadata-sources/)
-- [Plugins](https://docs.stashapp.cc/plugins/)
-- [Themes](https://docs.stashapp.cc/themes/)
-- [Other projects](https://docs.stashapp.cc/other-projects/)
+```text
+/          Hoard interface
+/legacy/   Existing Stash interface
+```
 
-## Architecture
+The legacy interface will only be removed after Hoard genuinely replaces the capabilities users still need.
 
-You can find an overview of Stash's architecture in the [ARCHITECTURE.md](docs/ARCHITECTURE.md) document.
+Backend changes will follow demonstrated requirements. Hoard will initially continue to use the existing server, database, GraphQL API, media pipeline, plugin system, and configuration model.
+
+## Project Direction
+
+Hoard is moving toward a media server that is:
+
+### Private by default
+
+Your library, metadata, viewing activity, and files should remain under your control. Hoard is designed to run on infrastructure you own or administer.
+
+### Useful for mixed collections
+
+A real home library rarely contains only one kind of media. Hoard should allow different collections to coexist without forcing the entire server to adopt the identity or assumptions of one category.
+
+### Strong at organization
+
+Folders and filenames are not enough for a large collection. Hoard will continue to emphasize metadata, relationships, filtering, tagging, discovery, and curation.
+
+### Pleasant to use
+
+The new interface will prioritize clear workflows, fast navigation, accessibility, keyboard use, responsive layouts, and useful error states. Visual polish matters, but it will not take priority over usability.
+
+### Incrementally developed
+
+Hoard will favour complete vertical slices, small reviewable changes, and working software over speculative rewrites and grand architectural resets.
+
+### Extensible
+
+Existing plugins, scrapers, metadata sources, and APIs are valuable parts of the inherited ecosystem. Compatibility will be preserved where practical while Hoard develops broader extension points over time.
+
+## Current Architecture
+
+| Area                | Technology                                |
+| ------------------- | ----------------------------------------- |
+| Server              | Go                                        |
+| Application API     | GraphQL and existing HTTP media endpoints |
+| Database            | SQLite                                    |
+| Existing interface  | React and TypeScript                      |
+| New Hoard interface | SvelteKit, Svelte 5, and TypeScript       |
+| Media processing    | FFmpeg                                    |
+| Licence             | GNU AGPL-3.0                              |
+
+The Hoard interface is built as a static client-side application and served by the Go server. It does not require a separate Node.js server in production.
+
+A separate management application may eventually provide process control, health monitoring, logs, backups, configuration, and upgrades. It will remain outside the main server process so that it can continue operating while the media server is stopped or restarted.
+
+## Development Status
+
+Hoard is currently establishing its own identity and frontend while remaining close to upstream Stash.
+
+Near-term work includes:
+
+* introducing Hoard branding without obscuring the project’s origins
+* adding the SvelteKit application under `ui/hoard`
+* serving the Hoard interface alongside the existing interface
+* building the first complete browsing and playback workflows
+* establishing typed access to the existing GraphQL API
+* retaining straightforward synchronization with upstream Stash
+* documenting the path from specialist collection manager to general home media server
+
+The roadmap will be driven by working user flows and real library-management needs. Features listed as future direction should not be assumed to exist until they are implemented and documented.
+
+## Installation
+
+Hoard does not yet have a stable end-user release or independent installation guide.
+
+During the initial transition, much of the build and runtime behaviour remains inherited from Stash. Developers should read:
+
+* [Development documentation](docs/DEVELOPMENT.md)
+* [Contributing documentation](docs/CONTRIBUTING.md)
+* [Agent and architectural instructions](AGENTS.md)
+* [Stash documentation](https://docs.stashapp.cc)
+
+Existing documentation may continue to use the Stash name while the transition is underway.
+
+Do not test development builds against the only copy of an important media library or database. Keep verified backups.
 
 ## Contributing
 
-We welcome contributions and help from all humans who want to improve the project.
+Hoard welcomes thoughtful contributions that support its transition into a broader home media server.
 
-Before contributing, please read the [Contributing](docs/CONTRIBUTING.md) document to understand our guidelines and processes for contributing to the project.
+Before beginning a large change:
 
-You can learn about setting up a local development environment in the [Development](docs/DEVELOPMENT.md) document. 
+1. Review [AGENTS.md](AGENTS.md).
+2. Search existing issues and discussions.
+3. Open an issue describing the user problem and proposed direction.
+4. Keep changes focused, testable, and compatible with the current transition stage.
 
-## Translation
+The project values:
 
-The widget below shows the current translation status of Stash across all supported languages. If you want to help us translate Stash, you can make an account at [Codeberg Translate](https://translate.codeberg.org/projects/stash/stash/) to contribute to new or existing languages. Thanks!
+* complete user workflows
+* red-green-refactor development
+* regression tests for bug fixes
+* small, coherent commits
+* accessibility
+* maintainable code
+* compatibility with upstream where practical
+* honest documentation of incomplete work
 
-[![Translation status](https://translate.codeberg.org/widget/stash/stash/multi-auto.svg)](https://translate.codeberg.org/engage/stash/)
+Avoid broad rewrites, unrelated formatting changes, premature abstractions, and changes that make upstream synchronization unnecessarily difficult.
+
+## Origin and Attribution
+
+Hoard exists because of the years of design, development, testing, documentation, and community work invested in Stash.
+
+The project gratefully acknowledges the Stash maintainers and contributors whose work forms Hoard’s original foundation.
+
+Hoard preserves the upstream Git history, licence, copyright notices, and appropriate attribution. References to Stash acknowledge that origin and do not imply endorsement of Hoard by the Stash project.
+
+## Licence
+
+Hoard is free and open-source software distributed under the [GNU Affero General Public License v3.0](LICENSE).
+
+You may use, study, modify, and redistribute Hoard under the terms of that licence. Modified versions that are distributed—or made available for users to interact with over a network—must provide the corresponding source code as required by the AGPL-3.0.
+
+New contributions must be compatible with the project’s AGPL-3.0 licensing.
+
+---
+
+<div align="center">
+
+**Hoard is being built for the media you chose to keep.**
+
+[Repository](https://github.com/mkfoss/hoard) · [Issues](https://github.com/mkfoss/hoard/issues) · [Stash Project](https://github.com/stashapp/stash)
+
+</div>
