@@ -283,7 +283,18 @@ jobs:
   # Job 4: Release
   # Waits for both test and build to pass, then collects all platform artifacts
   # into dist/ for checksums, GitHub releases, and multi-arch Docker push.
+  #
+  # This is upstream's release automation: it force-pushes the latest_develop tag,
+  # publishes GitHub releases and pushes Docker images. Hoard forks must not do any
+  # of that — force-pushing upstream-derived tags is explicitly out of bounds, and a
+  # fork publishing "stash" releases would be wrong even if it had the permissions
+  # (it does not; GITHUB_TOKEN is read-only, so the tag push 403s).
+  #
+  # Left in place rather than deleted so the job stays identical to upstream and
+  # rebases cleanly. When Hoard grows its own release process, it belongs in a
+  # separate workflow rather than in this condition.
   release:
+    if: github.repository == 'stashapp/stash'
     needs: [test, build]
     runs-on: ubuntu-24.04
     steps:
