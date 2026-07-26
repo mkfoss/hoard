@@ -42,6 +42,32 @@ NOTE: The `make` command in Windows will be `mingw32-make` with MinGW. For examp
 
 NOTE: The `make` command in OpenBSD will be `gmake`. For example, `make pre-ui` will be `gmake pre-ui`.
 
+## Mage (optional)
+
+Common development tasks are also available through [Mage](https://magefile.org),
+defined in `magefiles/`. Run `mage` with no arguments to list the targets:
+
+```bash
+go install github.com/magefile/mage@latest
+mage              # lists every target
+mage build        # compiles the server to ./bin/hoard
+mage ui           # builds both frontends
+mage clean        # removes build output
+```
+
+Mage sits **alongside** the Makefile rather than replacing it. The Makefile stays
+authoritative for cross-compilation (`build-cc-*`) and release packaging, which
+Mage deliberately does not duplicate. Where both exist they do the same thing, with
+one difference worth knowing:
+
+| | Makefile | Mage |
+| --- | --- | --- |
+| Server binary | `./stash` | `./bin/hoard` |
+| Phasher binary | `./phasher` | `./bin/phasher` |
+
+`magefiles/` is a separate Go module, so it adds nothing to the root `go.mod` and
+can be removed wholesale without touching the rest of the repository.
+
 ## Commands
 
 * `make pre-ui` - Installs the dependencies for both UIs (`ui/v2.5` and `ui/hoard`). This only needs to be run once after cloning the repository, or if the dependencies are updated.

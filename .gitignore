@@ -61,6 +61,8 @@ node_modules
 /stash
 /Stash.app
 /phasher
+# mage builds binaries here (make still writes ./stash and ./phasher)
+/bin
 dist
 .DS_Store
 /.local*
