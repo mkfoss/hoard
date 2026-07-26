@@ -55,6 +55,39 @@ anything else fails the build. The logic lives in `src/lib/base-path.ts` and is
 consumed by both `vite.config.ts` and `playwright.config.ts`, so the e2e suite
 always tests the base path the build actually uses.
 
+## Talking to the Go server in development
+
+`pnpm dev` proxies the Go server's API and media routes, so the browser only ever
+sees one origin:
+
+```
+browser ──► localhost:5173/hoard/     the app, from Vite
+browser ──► localhost:5173/graphql    forwarded ──► localhost:9999/graphql
+```
+
+This matters because Stash authenticates with a **session cookie**, and browsers do
+not send cookies cross-origin. `ui/v2.5` points at the server cross-origin instead,
+which is why logged-in development does not work there (`docs/DEVELOPMENT.md`).
+Proxying avoids that entirely and makes development match production, where the Go
+binary serves the app and the API together.
+
+Run the server on its default port and start the dev server:
+
+```bash
+./stash                              # localhost:9999
+cd ui/hoard && pnpm dev              # localhost:5173/hoard/
+HOARD_API_URL=http://host:8080 pnpm dev   # point at a server elsewhere
+```
+
+`HOARD_API_URL` must be an absolute http(s) URL; anything else fails fast rather
+than producing a proxy that forwards nowhere.
+
+The proxied prefixes live in `src/lib/dev-proxy.ts`. A test cross-checks them
+against the route registrations in `internal/api/server.go`, so a route added to the
+Go server fails the suite until it is either proxied or explicitly opted out.
+
+This is **dev only** — `server.proxy` does not exist in a production build.
+
 ## Build output
 
 `pnpm build` writes to `build/`, which is git-ignored. It contains only static

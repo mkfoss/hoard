@@ -4,6 +4,7 @@ import { playwright } from '@vitest/browser-playwright';
 import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { resolveBasePath } from './src/lib/base-path';
+import { createDevProxy, resolveApiUrl } from './src/lib/dev-proxy';
 
 // Vitest's browser harness is served from `/__vitest__/`, which SvelteKit's `base`
 // would rewrite out from under it. Component tests mount components directly and
@@ -26,6 +27,11 @@ export default defineConfig({
 			paths: { base }
 		})
 	],
+	// Dev only — forwards the Go server's routes so the browser sees a single
+	// origin and the session cookie works. Absent from the production build.
+	server: {
+		proxy: createDevProxy(resolveApiUrl(process.env.HOARD_API_URL))
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
