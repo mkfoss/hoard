@@ -416,6 +416,22 @@ fmt-ui:
 validate-ui:
 	cd ui/v2.5 && pnpm run validate
 
+# type-checks, lints and unit/component-tests the Hoard UI.
+# Browser tests live in validate-ui-hoard-e2e, which needs Playwright browsers.
+.PHONY: validate-ui-hoard
+validate-ui-hoard:
+	cd ui/hoard && pnpm run check && pnpm run lint && pnpm run test
+
+# Playwright end-to-end tests for the Hoard UI, against a real production build.
+# Downloads a browser on first run.
+.PHONY: validate-ui-hoard-e2e
+validate-ui-hoard-e2e:
+	cd ui/hoard && pnpm run test:e2e
+
+.PHONY: fmt-ui-hoard
+fmt-ui-hoard:
+	cd ui/hoard && pnpm run format
+
 # these targets run the same steps as fmt-ui and validate-ui, but only on files that have changed
 fmt-ui-quick:
 	cd ui/v2.5 && \
@@ -440,7 +456,7 @@ validate-backend: lint it
 
 # runs all of the tests and checks required for a PR to be accepted
 .PHONY: validate
-validate: validate-ui validate-backend
+validate: validate-ui validate-ui-hoard validate-ui-hoard-e2e validate-backend
 
 # locally builds and tags a 'stash/build' docker image
 .PHONY: docker-build

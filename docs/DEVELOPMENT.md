@@ -61,10 +61,13 @@ NOTE: The `make` command in OpenBSD will be `gmake`. For example, `make pre-ui` 
 * `make lint` - Runs `golangci-lint` on the backend
 * `make it` - Runs all unit and integration tests
 * `make fmt` - Formats the Go source code
-* `make fmt-ui` - Formats the UI source code
-* `make validate-ui` - Runs tests and checks for the UI only
-* `make fmt-ui-quick` - (experimental) Formats only changed UI source code
-* `make validate-ui-quick` - (experimental) Runs tests and checks of changed UI code
+* `make fmt-ui` - Formats the classic UI source code
+* `make validate-ui` - Runs tests and checks for the classic UI only
+* `make fmt-ui-quick` - (experimental) Formats only changed classic UI source code
+* `make validate-ui-quick` - (experimental) Runs tests and checks of changed classic UI code
+* `make fmt-ui-hoard` - Formats the Hoard UI source code
+* `make validate-ui-hoard` - Type-checks, lints and unit-tests the Hoard UI
+* `make validate-ui-hoard-e2e` - Runs the Hoard UI Playwright tests against a production build. Downloads a browser on first run.
 * `make server-start` - Runs a development stash server in the `.local` directory
 * `make server-clean` - Removes the `.local` directory and all of its contents
 * `make ui-start` - Runs the UI in development mode. Requires a running Stash server to connect to - the server URL can be changed from the default of `http://localhost:9999` using the environment variable `VITE_APP_PLATFORM_URL`, but keep in mind that authentication cannot be used since the session authorization cookie cannot be sent cross-origin. The UI runs on port `3000` or the next available port.

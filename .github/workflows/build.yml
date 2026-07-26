@@ -53,7 +53,9 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v6
       with:
-        node-version: '20'
+        # ui/hoard's Vite 8 requires ^20.19.0 || >=22.12.0, and pnpm enforces it via
+        # engine-strict. Node 20 is also end-of-life. ui/v2.5 needs >= 20.
+        node-version: '22'
         cache: 'pnpm'
         cache-dependency-path: |
           ui/v2.5/pnpm-lock.yaml
@@ -99,6 +101,71 @@ jobs:
           ui/v2.5/build/
           ui/hoard/build/
           ui/login/locales/
+
+  # Job 1b: Hoard UI checks
+  # Independent of Go codegen, so it runs in parallel and never delays the binary
+  # build. Exercises the same commands as `make validate-ui-hoard` plus Playwright.
+  validate-hoard:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
+      with:
+        package_json_file: ui/hoard/package.json
+
+    # same setup-node workaround as the generate job
+    # https://github.com/actions/setup-node/issues/1137#issuecomment-2508963254
+    - name: Ensure pnpm store path exists
+      run: |
+        PNPM_STORE_PATH="$( pnpm store path --silent )"
+        if [ ! -d "$PNPM_STORE_PATH" ]; then
+          echo "PNPM store directory does not exist, creating it."
+          mkdir -p "$PNPM_STORE_PATH"
+        fi
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        # Vite 8 requires ^20.19.0 || >=22.12.0; Node 20 is end-of-life.
+        node-version: '22'
+        cache: 'pnpm'
+        cache-dependency-path: ui/hoard/pnpm-lock.yaml
+
+    - name: Install dependencies
+      run: cd ui/hoard && pnpm install --frozen-lockfile
+
+    # Chromium must be present before validate-ui-hoard: the component tests run in
+    # Vitest browser mode, which launches it through Playwright. Cached separately
+    # from pnpm because the browser download dominates this job, and keyed on the
+    # Playwright version, which determines the browser build.
+    - name: Resolve Playwright version
+      id: playwright
+      run: echo "version=$(cd ui/hoard && pnpm exec playwright --version | grep -oE '[0-9.]+')" >> "$GITHUB_OUTPUT"
+
+    - name: Cache Playwright browsers
+      uses: actions/cache@v5
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ steps.playwright.outputs.version }}-chromium
+
+    - name: Install Chromium
+      run: cd ui/hoard && pnpm exec playwright install --with-deps chromium
+
+    - name: Check, lint and unit test
+      run: make validate-ui-hoard
+
+    - name: End-to-end tests
+      run: make validate-ui-hoard-e2e
+
+    - name: Upload Playwright report
+      if: failure()
+      uses: actions/upload-artifact@v7
+      with:
+        name: playwright-report
+        retention-days: 7
+        path: ui/hoard/playwright-report/
 
   # Job 2: Integration tests
   # Runs natively (no Docker) — only needs Go + GCC (for CGO/SQLite), both on ubuntu-22.04.

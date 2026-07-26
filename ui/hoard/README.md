@@ -32,6 +32,13 @@ pnpm test:e2e       # Playwright, against a real production build
 `pnpm test` deliberately excludes Playwright so the inner loop stays fast. Full
 validation runs `pnpm test:e2e` as a separate step.
 
+From the repository root, `make validate-ui-hoard` runs check + lint + unit tests
+and `make validate-ui-hoard-e2e` runs Playwright. Both are part of `make validate`
+and run in CI on every pull request.
+
+Node `^20.19.0 || >=22.12.0` is required (Vite 8). `.npmrc` sets `engine-strict`, so
+pnpm refuses to install on an older runtime rather than failing later in the build.
+
 ## Base path
 
 The app defaults to the `/hoard` base path. Override it at build time with
