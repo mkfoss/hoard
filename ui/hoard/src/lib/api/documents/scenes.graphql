@@ -1,0 +1,27 @@
+# Enough to identify a scene in a list. Deliberately not the whole Scene type:
+# every field here costs a resolver call on the server for every row.
+# The sort is explicit on purpose. With no sort the server emits no ORDER BY
+# (pkg/sqlite/scene.go setSceneSort returns early), so the rows come back in
+# whatever order the query plan happens to produce, and a capped list would show
+# an arbitrary 100 that could change between loads. Newest first is the useful
+# default for a library, and created_at is always populated, unlike date.
+query Scenes($perPage: Int!) {
+	findScenes(filter: { per_page: $perPage, sort: "created_at", direction: DESC }) {
+		count
+		scenes {
+			id
+			title
+			date
+			studio {
+				name
+			}
+			files {
+				basename
+				duration
+			}
+			paths {
+				screenshot
+			}
+		}
+	}
+}

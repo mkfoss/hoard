@@ -23,12 +23,16 @@ test('the classic-interface link targets the site root', async ({ page }) => {
 	await expect(link).toHaveAttribute('href', '/');
 });
 
-// The preview server serves the built SPA with no Go server behind it, which is
-// the real "backend is down" case. The app must still render and say so, rather
-// than showing a blank page or an unhandled rejection.
+// The app must still render and say so when the backend is down, rather than
+// showing a blank page or an unhandled rejection.
+//
+// The failure is forced rather than relying on no server being reachable: a
+// developer running stash locally would otherwise see this pass in CI and fail on
+// their machine, for reasons that have nothing to do with the change under test.
 test('degrades gracefully when the server cannot be reached', async ({ page }) => {
 	const crashes: string[] = [];
 	page.on('pageerror', (error) => crashes.push(error.message));
+	await page.route('**/graphql', (route) => route.abort('connectionrefused'));
 
 	await page.goto('./');
 

@@ -9,6 +9,7 @@
 
 	const links = [
 		{ href: resolve('/'), label: 'Home' },
+		{ href: resolve('/scenes'), label: 'Scenes' },
 		{ href: resolve('/settings'), label: 'Settings' },
 		{ href: resolve('/about'), label: 'About' }
 	];

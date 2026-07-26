@@ -10,5 +10,10 @@
  */
 export { GRAPHQL_ENDPOINT, GraphQLRequestError, UnauthorizedError, request } from './client';
 
-export { VersionDocument } from './generated/graphql';
-export type { VersionQuery, VersionQueryVariables } from './generated/graphql';
+export { ScenesDocument, VersionDocument } from './generated/graphql';
+export type {
+	ScenesQuery,
+	ScenesQueryVariables,
+	VersionQuery,
+	VersionQueryVariables
+} from './generated/graphql';

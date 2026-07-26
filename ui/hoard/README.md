@@ -168,12 +168,24 @@ sent, and distinguishes `UnauthorizedError` from other failures so callers can s
 the visitor to log in. Documents are emitted as plain strings, so the `graphql`
 package stays a build-time dependency and never reaches the browser bundle.
 
+## Routes
+
+| Route             | What it does                       |
+| ----------------- | ---------------------------------- |
+| `/hoard/`         | Project overview and status        |
+| `/hoard/scenes`   | Read-only list of up to 100 scenes |
+| `/hoard/settings` | Preferences owned by this browser  |
+| `/hoard/about`    | Origin as a Stash fork             |
+
 ## Deliberately deferred
 
 These will land as their own vertical slices:
 
 - **Authentication and session handling** beyond recognising a 401.
-- **Media browsing, playback, and metadata editing** — the first real workflow.
+- **Paging, sorting and filtering scenes.** The list is capped at 100 by
+  `SCENE_PAGE_SIZE`, applied server-side as `per_page`.
+- **Opening a scene, playback, and metadata editing** — the rest of the first real
+  workflow.
 
 ## Constraints
 
